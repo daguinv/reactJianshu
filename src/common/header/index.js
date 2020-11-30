@@ -9,26 +9,32 @@ import { actionCreator } from './store'
 class Header extends React.Component {
   constructor(props) {
     super(props);
+    this.pageRef = React.createRef();
   }
   // 显示搜索下拉
   searchInfo(show) {
-    if (show) {
-      return (<SearchTips>
+    const {changeInfoPage,infoHotList,currentPage,mouseEnter,mouseLeave,isEnter} = this.props;
+    const showList = [];
+    if(infoHotList && infoHotList.length > 0){
+      let len = infoHotList.length -  (currentPage * 10);
+      let length  = len < 10 ? len : 10;
+      for(let i = currentPage * 10; i < currentPage * 10 + length; i++){
+        showList.push(<InfoItem key={i}>{infoHotList[i]}</InfoItem>)
+      }
+    }
+    if (show || isEnter) {
+      return (
+      <SearchTips onMouseEnter={mouseEnter} >
         <div className="title">热门搜索</div>
-        <span className="iconfont">&#xe648;</span>
-        <ul>
-          {
-            this.props.infoHotList.map((item) =>{
-              return <InfoItem key={item}>{item}</InfoItem>
-            })
-          }
-        </ul>
+        <span className="iconfont" onClick={() => {changeInfoPage(this.pageRef.current)}} ref={this.pageRef}>&#xe648;</span>
+        <ul>{showList}</ul>
       </SearchTips>)
     }else{
       return null;
     }
   }
   render() {
+    const {isFocus,infoHotList,changeFocus,changeBlur} = this.props;
     return (
       <HeaderWrapper>
         <Logo href="/">
@@ -44,19 +50,18 @@ class Header extends React.Component {
           <Item>
             <SearchWrapper>
               <CSSTransition
-                in={this.props.isFocus}
+                in={isFocus}
                 timeout={300}
                 classNames="slide">
                 <Search
                   type="text"
-                  className={this.props.isFocus ? 'extension' : ''}
-                  onFocus={this.props.changeFocus}
-                  onBlur={this.props.changeBlur}
-                // value={this.props.inputValue}
+                  className={isFocus ? 'extension' : ''}
+                  onFocus={() => {changeFocus(infoHotList)}}
+                  onBlur={changeBlur}
                 />
               </CSSTransition>
-              <span className={this.props.isFocus ? 'extension iconfont' : 'iconfont'}>&#xe602;</span>
-              {this.searchInfo(this.props.isFocus)}
+              <span className={isFocus ? 'extension iconfont' : 'iconfont'}>&#xe602;</span>
+              {this.searchInfo(isFocus)}
             </SearchWrapper>
           </Item>
         </Container>
@@ -78,17 +83,33 @@ class Header extends React.Component {
 const mapStateToProps = (state) => {
   return {
     isFocus: state.header.isFocus,
-    infoHotList:state.header.infoHotList
+    isEnter:state.header.isEnter,
+    infoHotList:state.header.infoHotList,
+    currentPage:state.header.currentPage,
+    totalPage:state.header.totalPage
   }
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    changeFocus: () => {
+    changeFocus: (infoHotList) => {
       dispatch(actionCreator.changeFocus());
+      if(infoHotList.length  == 0)
       dispatch(actionCreator.getInfoData());
     },
     changeBlur: () => {
       dispatch(actionCreator.changeBlur())
+    },
+    mouseEnter: () => {
+      dispatch(actionCreator.mouseEnter())
+    },
+    mouseLeave:() => {
+      dispatch(actionCreator.mouseLeave())      
+    },
+    changeInfoPage: (dom) => {
+      let deg = dom.style.transform.replace(/[^0-9]/ig,"");
+      deg = Number(deg)
+      dom.style.transform =`rotate(${deg + 360}deg)`
+      dispatch(actionCreator.changePage())
     }
   }
 }

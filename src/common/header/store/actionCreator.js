@@ -1,4 +1,4 @@
-import {CHANGEFOCUS,CHANGEbLUE,INFOHOTDATA} from './actionTypes'
+import {CHANGEFOCUS,CHANGEbLUE,INFOHOTDATA,CHANGEPAGE,MOUSENTER,MOUSELEAVE} from './actionTypes'
 import axios from 'axios';
 
 function changeFocus(){
@@ -16,7 +16,8 @@ function changeBlur(){
 function changeInfoList(data){
   return {
     type:INFOHOTDATA,
-    data
+    data,
+    totalPage:Math.ceil(data.length / 10)
   }
 }
 function getInfoData(){
@@ -28,5 +29,21 @@ function getInfoData(){
     })
   }
 }
+function mouseEnter(){
+  return {
+    type: MOUSENTER
+  }
+}
+function mouseLeave(){
+  return {
+    type: MOUSELEAVE
+  }
+}
+function changePage(){
+  return {
+    type:CHANGEPAGE
+  }
+}
 
-export {changeFocus,changeBlur,getInfoData}
+
+export {changeFocus,changeBlur,getInfoData,changePage,mouseEnter,mouseLeave}

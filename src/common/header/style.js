@@ -129,8 +129,12 @@ const SearchTips = styled.div`
     color:#969696;
   }
   span{
-    top:5px;
+    top:8px;
+    width:21px;
+    height:27px;
     cursor: pointer;
+    transition:all 0.2s ease-in;
+    transform-origin: center;
   }
   ul{
     overflow:hidden;
