@@ -5,6 +5,7 @@ import { HeaderWrapper, Logo, Container, Item, Search, A, SearchWrapper, SearchT
 import { CSSTransition } from 'react-transition-group';
 import { connect } from 'react-redux'
 import { actionCreator } from './store'
+import { Link } from 'react-router-dom'
 
 class Header extends React.Component {
   constructor(props) {
@@ -13,36 +14,39 @@ class Header extends React.Component {
   }
   // 显示搜索下拉
   searchInfo(show) {
-    const {changeInfoPage,infoHotList,currentPage,mouseEnter,mouseLeave,isEnter} = this.props;
+    const { changeInfoPage, infoHotList, currentPage, mouseEnter, mouseLeave, isEnter } = this.props;
     const showList = [];
-    if(infoHotList && infoHotList.length > 0){
-      let len = infoHotList.length -  (currentPage * 10);
-      let length  = len < 10 ? len : 10;
-      for(let i = currentPage * 10; i < currentPage * 10 + length; i++){
+    if (infoHotList && infoHotList.length > 0) {
+      let len = infoHotList.length - (currentPage * 10);
+      let length = len < 10 ? len : 10;
+      for (let i = currentPage * 10; i < currentPage * 10 + length; i++) {
         showList.push(<InfoItem key={i}>{infoHotList[i]}</InfoItem>)
       }
     }
     if (show || isEnter) {
       return (
-      <SearchTips onMouseEnter={mouseEnter} >
-        <div className="title">热门搜索</div>
-        <span className="iconfont" onClick={() => {changeInfoPage(this.pageRef.current)}} ref={this.pageRef}>&#xe648;</span>
-        <ul>{showList}</ul>
-      </SearchTips>)
-    }else{
+        <SearchTips onMouseEnter={mouseEnter} onMouseLeave={mouseLeave}>
+          <div className="title">热门搜索</div>
+          <span className="iconfont" onClick={() => { changeInfoPage(this.pageRef.current) }} ref={this.pageRef}>&#xe648;</span>
+          <ul>{showList}</ul>
+        </SearchTips>)
+    } else {
       return null;
     }
   }
   render() {
-    const {isFocus,infoHotList,changeFocus,changeBlur} = this.props;
+    const { isFocus, infoHotList, changeFocus, changeBlur } = this.props;
     return (
       <HeaderWrapper>
-        <Logo href="/">
-          <img src={logoPic} />
-        </Logo>
+        <Link to="/">
+          <Logo >
+            <img src={logoPic} />
+          </Logo>
+        </Link>
+
         <Container className="left">
           <Item>
-            <A active href="/">首页</A>
+            <Link to="/"><A active>首页</A></Link>
           </Item>
           <Item>
             <A>下载App</A>
@@ -56,7 +60,7 @@ class Header extends React.Component {
                 <Search
                   type="text"
                   className={isFocus ? 'extension' : ''}
-                  onFocus={() => {changeFocus(infoHotList)}}
+                  onFocus={() => { changeFocus(infoHotList) }}
                   onBlur={changeBlur}
                 />
               </CSSTransition>
@@ -83,18 +87,18 @@ class Header extends React.Component {
 const mapStateToProps = (state) => {
   return {
     isFocus: state.header.isFocus,
-    isEnter:state.header.isEnter,
-    infoHotList:state.header.infoHotList,
-    currentPage:state.header.currentPage,
-    totalPage:state.header.totalPage
+    isEnter: state.header.isEnter,
+    infoHotList: state.header.infoHotList,
+    currentPage: state.header.currentPage,
+    totalPage: state.header.totalPage
   }
 }
 const mapDispatchToProps = (dispatch) => {
   return {
     changeFocus: (infoHotList) => {
       dispatch(actionCreator.changeFocus());
-      if(infoHotList.length  == 0)
-      dispatch(actionCreator.getInfoData());
+      if (infoHotList.length == 0)
+        dispatch(actionCreator.getInfoData());
     },
     changeBlur: () => {
       dispatch(actionCreator.changeBlur())
@@ -102,13 +106,13 @@ const mapDispatchToProps = (dispatch) => {
     mouseEnter: () => {
       dispatch(actionCreator.mouseEnter())
     },
-    mouseLeave:() => {
-      dispatch(actionCreator.mouseLeave())      
+    mouseLeave: () => {
+      dispatch(actionCreator.mouseLeave())
     },
     changeInfoPage: (dom) => {
-      let deg = dom.style.transform.replace(/[^0-9]/ig,"");
+      let deg = dom.style.transform.replace(/[^0-9]/ig, "");
       deg = Number(deg)
-      dom.style.transform =`rotate(${deg + 360}deg)`
+      dom.style.transform = `rotate(${deg + 360}deg)`
       dispatch(actionCreator.changePage())
     }
   }

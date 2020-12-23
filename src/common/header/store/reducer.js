@@ -41,7 +41,7 @@ export default function(state = defaultState,action){
         ...state,
         isEnter:true
       }
-      case MOUSELEAVE:
+    case MOUSELEAVE:
       return {
         ...state,
         isEnter:false

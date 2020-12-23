@@ -5,7 +5,7 @@ const HeaderWrapper = styled.div`
   height:58px;
   border-bottom:1px solid #e7e7e7;
 `
-const Logo = styled.a`
+const Logo = styled.div`
   height:100%;
   display:inline-block;
   img{
@@ -28,7 +28,7 @@ const Item = styled.li`
   margin-right: 10px;
 `
 
-const A = styled.a`
+const A = styled.div`
   display:inline-block;
   height: 100%;
   line-height: 26px;
@@ -110,6 +110,7 @@ const SearchTips = styled.div`
   left: 0;
   top: 100%;
   border-radius: 4px;
+  background-color:#fff;
   box-shadow: 0 0 8px rgba(0,0,0,.2);
   :before {
     content: "";
