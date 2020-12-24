@@ -6,6 +6,7 @@ import { CSSTransition } from 'react-transition-group';
 import { connect } from 'react-redux'
 import { actionCreator } from './store'
 import { Link } from 'react-router-dom'
+import {logoutState} from '../../page/login/store/actionCreator'
 
 class Header extends React.Component {
   constructor(props) {
@@ -33,6 +34,19 @@ class Header extends React.Component {
     } else {
       return null;
     }
+  }
+  showLogin(){
+    const {isLogin} = this.props
+    if(isLogin){
+      return (
+        <A onClick={this.props.logout}>退出</A>
+      )
+    }else{
+      return (
+        <Link to="/login"><A>登录</A></Link>
+      )
+    }
+    
   }
   render() {
     const { isFocus, infoHotList, changeFocus, changeBlur } = this.props;
@@ -74,7 +88,7 @@ class Header extends React.Component {
             <A><span className="iconfont">&#xe600;</span></A>
           </Item>
           <Item><A className="tone"><span className="iconfont">&#xe601;</span></A></Item>
-          <Item><A>登录</A></Item>
+          <Item>{this.showLogin()}</Item>
           <Item><A className="btn">注册</A></Item>
           <Item><A className="btn" active>
             <span className="iconfont">&#xe605;</span>
@@ -90,7 +104,8 @@ const mapStateToProps = (state) => {
     isEnter: state.header.isEnter,
     infoHotList: state.header.infoHotList,
     currentPage: state.header.currentPage,
-    totalPage: state.header.totalPage
+    totalPage: state.header.totalPage,
+    isLogin:state.login.isLogin
   }
 }
 const mapDispatchToProps = (dispatch) => {
@@ -114,6 +129,9 @@ const mapDispatchToProps = (dispatch) => {
       deg = Number(deg)
       dom.style.transform = `rotate(${deg + 360}deg)`
       dispatch(actionCreator.changePage())
+    },
+    logout:() => {
+      dispatch(logoutState())
     }
   }
 }

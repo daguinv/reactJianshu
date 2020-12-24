@@ -4,8 +4,9 @@ import { GlobalFont } from './static/font'
 import Header from './common/header'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import Home from './page/home'
-import Detail from './page/detail'
-
+// import Detail from './page/detail'
+import Login from './page/login'
+import Detail from './page/detail/loadable'
 
 function App() {
   return (
@@ -20,6 +21,9 @@ function App() {
           </Route>
           <Route path="/detail/:id" exact>
             <Detail />
+          </Route>
+          <Route path="/login" exact>
+            <Login />
           </Route>
         </div>
       </BrowserRouter>
